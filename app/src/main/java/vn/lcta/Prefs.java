@@ -16,6 +16,10 @@ public final class Prefs {
     public static final String NIGHT_TIMEOUT = "timeout";
     public static final String NIGHT_OFF = "off";
 
+    /** Màn hình chính: bảng lịch đầy đủ hoặc chỉ đồng hồ lật kiểu HTC. */
+    public static final String DISPLAY_BOARD = "board";
+    public static final String DISPLAY_FLIP = "flip";
+
     public static final String LAYOUT_AUTO = "auto";
     public static final String LAYOUT_2 = "2";
     public static final String LAYOUT_3 = "3";
@@ -151,6 +155,20 @@ public final class Prefs {
 
     public int fontScale() {
         return sp.getInt("font_scale", 100);
+    }
+
+    public String displayMode() {
+        return sp.getString("display_mode", DISPLAY_BOARD);
+    }
+
+    /** Chế độ chỉ đồng hồ lật. */
+    public boolean clockOnly() {
+        return DISPLAY_FLIP.equals(displayMode());
+    }
+
+    /** Hiện ngày, âm lịch, thời tiết dưới đồng hồ lật. */
+    public boolean flipInfo() {
+        return sp.getBoolean("flip_info", true);
     }
 
     public boolean burnInShift() {

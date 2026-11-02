@@ -74,6 +74,11 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
     private TextView clock, dateLine, lunarLine, canChiLine, eventLine, tempText, descText, detailText, statusText;
     private WeatherIcon nowIcon;
     private BatteryView battView;
+    private boolean flipMode;
+    private boolean flipNarrow;
+    private FlipCard flipHours, flipMinutes;
+    private TextView flipDate, flipLunar, flipTemp, flipDesc;
+    private WeatherIcon flipIcon;
     private TextView battText;
     private int battPct = -1;
     private boolean battCharging;
@@ -391,6 +396,18 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         root.removeAllViews();
         content = new FrameLayout(this);
         root.addView(content, new FrameLayout.LayoutParams(-1, -1));
+        clearViews();
+        flipMode = prefs.clockOnly();
+        if (flipMode) {
+            buildFlip(w, h);
+            pageKeys.clear();
+            rendered.clear();
+            dayKey = "";
+            renderClock();
+            renderWeather();
+            renderStatus();
+            return;
+        }
         int pad = ui.px(8);
         int gap = ui.px(8);
         LinearLayout board = new LinearLayout(this);
@@ -505,6 +522,12 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         col.add(hoursRow, 6, ui.px(6));
 
         col.addFill(ui.spacer());
+        col.add(buildBottomRow(), 0, ui.px(4));
+        return col;
+    }
+
+    /** Dòng trạng thái + pin (dùng chung cho bảng lịch và đồng hồ lật). */
+    private View buildBottomRow() {
         LinearLayout bottom = ui.row();
         statusText = ui.text(12, Theme.FAINT, false);
         statusText.setOnClickListener(new View.OnClickListener() {
@@ -522,9 +545,150 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         battText = ui.text(12.5f, Theme.DIM, true);
         battText.setPadding(ui.px(4), 0, 0, 0);
         bottom.addView(battText);
-        col.add(bottom, 0, ui.px(4));
         renderBattery();
-        return col;
+        return bottom;
+    }
+
+    private void clearViews() {
+        clock = dateLine = lunarLine = canChiLine = eventLine = tempText = descText = detailText = statusText = null;
+        nowIcon = null;
+        hoursRow = null;
+        midMonth = null;
+        midTitle = null;
+        midExtra = null;
+        pageTitle = null;
+        headerExtra = null;
+        dots = null;
+        pageBox = null;
+        newsView = null;
+        battView = null;
+        battText = null;
+        flipHours = flipMinutes = null;
+        flipDate = flipLunar = flipTemp = flipDesc = null;
+        flipIcon = null;
+    }
+
+    // ------------------------------------------------------------------ đồng hồ lật
+
+    private static TextView sized(TextView t, float px) {
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, px);
+        return t;
+    }
+
+    /** Chế độ chỉ đồng hồ: hai thẻ lật giờ/phút kiểu HTC, thông tin phụ bên dưới. */
+    private void buildFlip(int w, int h) {
+        int pad = ui.px(10);
+        LinearLayout col = ui.col();
+        col.setGravity(Gravity.CENTER_HORIZONTAL);
+        col.setPadding(pad, pad, pad, pad);
+        col.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openSettings();
+                return true;
+            }
+        });
+        content.addView(col, new FrameLayout.LayoutParams(-1, -1));
+
+        float innerW = w - 2f * pad;
+        float innerH = h - 2f * pad;
+        flipNarrow = innerW / ui.density < 560;
+        boolean info = prefs.flipInfo();
+        float bottomH = ui.pxf(22);
+        float infoH = info ? innerH * 0.24f : 0f;
+        float avail = innerH - bottomH - infoH;
+        // Hai thẻ rộng 1,1 lần chiều cao, khe giữa 0,08 lần chiều cao.
+        float ch = Math.min(avail * 0.92f, innerW * 0.96f / (2 * 1.1f + 0.08f));
+        int cardH = Math.round(ch);
+        int cardW = Math.round(ch * 1.1f);
+        int gapC = Math.round(ch * 0.08f);
+
+        col.addView(new View(this), new LinearLayout.LayoutParams(1, 0, 1f));
+        LinearLayout cards = ui.row();
+        cards.setGravity(Gravity.CENTER);
+        cards.setClipChildren(false);
+        flipHours = new FlipCard(this);
+        flipMinutes = new FlipCard(this);
+        cards.addView(flipHours, new LinearLayout.LayoutParams(cardW, cardH));
+        LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(cardW, cardH);
+        mp.leftMargin = gapC;
+        cards.addView(flipMinutes, mp);
+        col.addView(cards, new LinearLayout.LayoutParams(-2, -2));
+
+        if (info) {
+            float big = Math.max(ui.pxf(14), Math.min(ch * 0.12f, infoH * 0.3f));
+            float small = big * 0.86f;
+            LinearLayout r1 = ui.row();
+            r1.setGravity(Gravity.CENTER);
+            flipDate = sized(ui.text(16, Theme.TEXT, false), big);
+            r1.addView(flipDate);
+            r1.addView(sized(ui.text("  ·  ", 16, Theme.FAINT, false), big));
+            flipLunar = sized(ui.text(16, Theme.ACCENT, true), big);
+            r1.addView(flipLunar);
+            LinearLayout.LayoutParams r1p = new LinearLayout.LayoutParams(-2, -2);
+            r1p.topMargin = Math.round(ch * 0.07f);
+            col.addView(r1, r1p);
+
+            LinearLayout r2 = ui.row();
+            r2.setGravity(Gravity.CENTER);
+            flipIcon = new WeatherIcon(this, Math.round(small * 1.5f));
+            r2.addView(flipIcon);
+            flipTemp = sized(ui.text(16, Theme.TEXT, true), small * 1.15f);
+            flipTemp.setPadding(Math.round(small * 0.3f), 0, Math.round(small * 0.4f), 0);
+            r2.addView(flipTemp);
+            flipDesc = sized(ui.text(14, Theme.DIM, false), small);
+            r2.addView(flipDesc);
+            LinearLayout.LayoutParams r2p = new LinearLayout.LayoutParams(-2, -2);
+            r2p.topMargin = Math.round(small * 0.35f);
+            col.addView(r2, r2p);
+        }
+        col.addView(new View(this), new LinearLayout.LayoutParams(1, 0, 1f));
+        col.addView(buildBottomRow(), new LinearLayout.LayoutParams(-1, -2));
+
+        TextView menu = ui.text("···", 18, Theme.FAINT, true);
+        menu.setPadding(ui.px(14), ui.px(4), ui.px(12), ui.px(10));
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSettings();
+            }
+        });
+        content.addView(menu, new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.RIGHT));
+    }
+
+    private void renderFlipClock(Calendar now) {
+        if (flipHours == null) return;
+        flipHours.setText(Fmt.two(now.get(Calendar.HOUR_OF_DAY)), true);
+        flipMinutes.setText(Fmt.two(now.get(Calendar.MINUTE)), true);
+        if (flipDate != null) {
+            // Màn hẹp (3,5"–4"): bỏ năm để dòng ngày + âm lịch vừa một hàng.
+            flipDate.setText(Fmt.WEEKDAYS[now.get(Calendar.DAY_OF_WEEK)] + ", "
+                    + (flipNarrow ? Fmt.ddmm(now) : Fmt.ddmmyyyy(now)));
+            LunarDate ld = Lunar.solarToLunar(now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.MONTH) + 1, now.get(Calendar.YEAR));
+            Lunar.Holiday hol = Lunar.holidayOn(now.get(Calendar.DAY_OF_MONTH), now.get(Calendar.MONTH) + 1, ld);
+            String lunar = "Âm lịch " + ld.day + "/" + ld.month + (ld.leap ? " nhuận" : "") + " " + Lunar.yearCanChi(ld.year);
+            if (hol != null) lunar += " · " + hol.name;
+            flipLunar.setText(lunar);
+            flipLunar.setTextColor(hol != null ? Theme.HOLIDAY : Theme.ACCENT);
+        }
+    }
+
+    private void renderFlipWeather() {
+        if (flipIcon == null) return;
+        JSONObject w = hub.data("weather");
+        JSONObject now = w == null ? null : w.optJSONObject("now");
+        if (now == null) {
+            flipIcon.setVisibility(View.GONE);
+            flipTemp.setText("");
+            DataHub.Entry e = hub.entry("weather");
+            flipDesc.setText(e != null && e.error != null ? "Thời tiết: " + e.error : "Đang tải thời tiết…");
+            return;
+        }
+        int code = now.optInt("code");
+        flipIcon.setVisibility(View.VISIBLE);
+        flipIcon.set(code, now.optInt("day", 1) == 1, Theme.BG);
+        flipTemp.setText(Fmt.temp(now.optDouble("t")));
+        flipDesc.setText(WeatherCodes.text(code)); // tên thành phố đã có ở dòng trạng thái
     }
 
     // ------------------------------------------------------------------ pin
@@ -665,6 +829,10 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
     // ------------------------------------------------------------------ hiển thị
 
     private void renderClock() {
+        if (flipMode) {
+            renderFlipClock(Calendar.getInstance());
+            return;
+        }
         if (clock == null) return;
         Calendar now = Calendar.getInstance();
         clock.setText(Fmt.hhmm(now));
@@ -682,6 +850,7 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
     }
 
     private void renderLunar() {
+        if (lunarLine == null) return;
         Calendar now = Calendar.getInstance();
         int d = now.get(Calendar.DAY_OF_MONTH);
         int m = now.get(Calendar.MONTH) + 1;
@@ -725,6 +894,10 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
     }
 
     private void renderWeather() {
+        if (flipMode) {
+            renderFlipWeather();
+            return;
+        }
         if (tempText == null) return;
         JSONObject w = hub.data("weather");
         hoursRow.removeAllViews();
