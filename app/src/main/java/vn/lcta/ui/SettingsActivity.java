@@ -198,7 +198,7 @@ public class SettingsActivity extends Activity implements Updater.Listener {
                 }
             });
         }
-        note(root, "Samsung/Xiaomi/Oppo: thêm Lịch Bảng vào danh sách được chạy nền / tự khởi động trong phần quản lý pin của máy.");
+        note(root, "Samsung/Xiaomi/Oppo: thêm Lịch LCTA vào danh sách được chạy nền / tự khởi động trong phần quản lý pin của máy.");
 
         section(root, "7. Cập nhật");
         versionText = note(root, "");

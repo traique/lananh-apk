@@ -2,11 +2,14 @@ package vn.lcta.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +73,11 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
 
     private TextView clock, dateLine, lunarLine, canChiLine, eventLine, tempText, descText, detailText, statusText;
     private WeatherIcon nowIcon;
+    private BatteryView battView;
+    private TextView battText;
+    private int battPct = -1;
+    private boolean battCharging;
+    private float battTemp = Float.NaN;
     private LinearLayout hoursRow;
     private int hoursCount;
 
@@ -149,6 +157,11 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
             }
         };
         hub.start();
+        try {
+            // ACTION_BATTERY_CHANGED là broadcast "dính": nhận ngay giá trị hiện tại.
+            readBattery(registerReceiver(batteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
+        } catch (Throwable ignored) {
+        }
         touch();
         lastTouch = 0;
         if (root.getWidth() > 0) rebuild();
@@ -165,6 +178,10 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         hub.removeListener(this);
         updater.removeListener(this);
         hub.stop();
+        try {
+            unregisterReceiver(batteryReceiver);
+        } catch (Throwable ignored) {
+        }
         WakeService.onWave = null;
         handler.removeCallbacksAndMessages(null);
         super.onPause();
@@ -488,6 +505,7 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         col.add(hoursRow, 6, ui.px(6));
 
         col.addFill(ui.spacer());
+        LinearLayout bottom = ui.row();
         statusText = ui.text(12, Theme.FAINT, false);
         statusText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -495,8 +513,62 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
                 onStatusClick();
             }
         });
-        col.add(statusText, 0, ui.px(4));
+        bottom.addView(statusText, Ui.weight(1));
+        // Pin: app chạy toàn màn hình nên thanh trạng thái của máy bị ẩn.
+        battView = new BatteryView(this, ui.px(13));
+        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(-2, -2);
+        bp.leftMargin = ui.px(8);
+        bottom.addView(battView, bp);
+        battText = ui.text(12.5f, Theme.DIM, true);
+        battText.setPadding(ui.px(4), 0, 0, 0);
+        bottom.addView(battText);
+        col.add(bottom, 0, ui.px(4));
+        renderBattery();
         return col;
+    }
+
+    // ------------------------------------------------------------------ pin
+
+    private final BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            readBattery(intent);
+        }
+    };
+
+    private void readBattery(Intent i) {
+        if (i == null) return;
+        int level = i.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = i.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+        battPct = level < 0 || scale <= 0 ? -1 : Math.round(level * 100f / scale);
+        int status = i.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        int plugged = i.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+        battCharging = plugged != 0 || status == BatteryManager.BATTERY_STATUS_CHARGING
+                || status == BatteryManager.BATTERY_STATUS_FULL;
+        int temp = i.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, Integer.MIN_VALUE);
+        battTemp = temp == Integer.MIN_VALUE ? Float.NaN : temp / 10f;
+        renderBattery();
+    }
+
+    private void renderBattery() {
+        if (battView == null || battText == null) return;
+        battView.set(battPct, battCharging);
+        if (battPct < 0) {
+            battView.setVisibility(View.GONE);
+            battText.setVisibility(View.GONE);
+            return;
+        }
+        battView.setVisibility(View.VISIBLE);
+        battText.setVisibility(View.VISIBLE);
+        String s = battPct + "%";
+        int color = battPct < 20 && !battCharging ? Theme.DOWN : Theme.DIM;
+        // Máy cắm sạc liên tục dễ nóng/phồng pin: cảnh báo khi pin quá nóng.
+        if (!Float.isNaN(battTemp) && battTemp >= 45f) {
+            s += " · " + Math.round(battTemp) + "°C";
+            color = Theme.WARN;
+        }
+        battText.setText(s);
+        battText.setTextColor(color);
     }
 
     private TextView navButton(String label, View.OnClickListener l) {
@@ -726,7 +798,7 @@ public class MainActivity extends Activity implements DataHub.Listener, Updater.
         }
         DataHub.Entry e = hub.entry("weather");
         String s = prefs.placeName();
-        if (e != null && e.at > 0) s += " · cập nhật " + Fmt.hhmm(e.at);
+        if (e != null && e.at > 0) s += " · " + Fmt.hhmm(e.at);
         statusText.setText(s);
         statusText.setTextColor(Theme.FAINT);
     }

@@ -249,7 +249,7 @@ public final class Updater {
                         Uri.parse("package:" + app.getPackageName())));
             } catch (Throwable ignored) {
             }
-            set(State.READY, "Hãy bật \"Cho phép cài ứng dụng\" cho Lịch Bảng rồi bấm cài lại");
+            set(State.READY, "Hãy bật \"Cho phép cài ứng dụng\" cho Lịch LCTA rồi bấm cài lại");
             return;
         }
         if (Build.VERSION.SDK_INT >= 24) {
