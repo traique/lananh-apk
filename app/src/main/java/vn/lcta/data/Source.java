@@ -27,7 +27,8 @@ public abstract class Source {
     }
 
     public boolean enabled(Prefs prefs) {
-        return prefs.pageEnabled(key);
+        // Chế độ chỉ đồng hồ không hiện các trang nên không tải (trừ thời tiết).
+        return !prefs.clockOnly() && prefs.pageEnabled(key);
     }
 
     /** Khoá nhận diện cấu hình (vd. thành phố). Đổi khoá thì dữ liệu cũ bị bỏ. */

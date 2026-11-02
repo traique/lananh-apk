@@ -51,7 +51,8 @@ public class SettingsActivity extends Activity implements Updater.Listener {
     private TextView placeState, adminState, updateState, versionText;
     private Button adminButton, installButton;
     private CheckBox alwaysOn, burnIn, proximity, wakeMorning, autoStart, autoUpdate;
-    private RadioGroup layoutGroup, nightGroup;
+    private RadioGroup layoutGroup, nightGroup, displayGroup;
+    private CheckBox flipInfo;
     private final List<CheckBox> pageChecks = new ArrayList<CheckBox>();
     private boolean geocoding;
 
@@ -119,6 +120,12 @@ public class SettingsActivity extends Activity implements Updater.Listener {
         feeds.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
 
         section(root, "4. Trang hiển thị");
+        label(root, "Màn hình chính");
+        displayGroup = radios(root, 300, new String[]{
+                "Bảng lịch đầy đủ (giờ, âm lịch, các trang thông tin)",
+                "Chỉ đồng hồ lật (kiểu HTC)"});
+        flipInfo = check(root, "Đồng hồ lật: hiện ngày, âm lịch và thời tiết bên dưới");
+        note(root, "Các mục bên dưới chỉ dùng cho bảng lịch đầy đủ.");
         label(root, "Các trang tự xoay vòng bên phải (chạm để sang trang, vuốt ngang để chuyển)");
         for (int i = 0; i < Prefs.PAGE_KEYS.length; i++) {
             CheckBox c = check(root, Prefs.PAGE_NAMES[i]);
@@ -324,6 +331,8 @@ public class SettingsActivity extends Activity implements Updater.Listener {
         watchlist.setText(prefs.watchlistRaw());
         feeds.setText(prefs.feedsRaw());
         for (CheckBox c : pageChecks) c.setChecked(prefs.pageEnabled((String) c.getTag()));
+        displayGroup.check(prefs.clockOnly() ? 301 : 300);
+        flipInfo.setChecked(prefs.flipInfo());
         rotate.setText(String.valueOf(prefs.rotateSeconds()));
         String l = prefs.layout();
         layoutGroup.check(Prefs.LAYOUT_2.equals(l) ? 101 : Prefs.LAYOUT_3.equals(l) ? 102 : 100);
@@ -366,6 +375,9 @@ public class SettingsActivity extends Activity implements Updater.Listener {
         for (CheckBox c : pageChecks) if (c.isChecked()) pagesOn.add((String) c.getTag());
         if (pagesOn.isEmpty()) pagesOn.add("month");
         prefs.setPages(pagesOn);
+        int did = displayGroup.getCheckedRadioButtonId();
+        prefs.putString("display_mode", did == 301 ? Prefs.DISPLAY_FLIP : Prefs.DISPLAY_BOARD);
+        prefs.putBool("flip_info", flipInfo.isChecked());
         prefs.putInt("rotate_seconds", intOr(rotate, 20, 5, 600));
         int lid = layoutGroup.getCheckedRadioButtonId();
         prefs.putString("layout", lid == 101 ? Prefs.LAYOUT_2 : lid == 102 ? Prefs.LAYOUT_3 : Prefs.LAYOUT_AUTO);

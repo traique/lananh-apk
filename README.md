@@ -22,6 +22,8 @@ Lấy dữ liệu **trực tiếp** từ nguồn, không qua bot/máy chủ trun
 
 Chỉ tải dữ liệu khi màn hình đang sáng. Dữ liệu được lưu lại, mất mạng vẫn hiện dữ liệu cũ kèm nhãn "dữ liệu cũ".
 
+**Chế độ chỉ đồng hồ lật (kiểu HTC):** chọn trong *Cài đặt > Trang hiển thị > Màn hình chính*. Hai thẻ giờ/phút cỡ lớn, nền xám than chia đôi có bản lề, nửa trên gập xuống khi đổi phút; tuỳ chọn hiện ngày, âm lịch, thời tiết bên dưới. Vẫn có pin, chế độ đêm, chống lưu ảnh; chỉ tải thời tiết để tiết kiệm mạng. Giữ lâu màn hình hoặc bấm ··· để mở Cài đặt.
+
 **Bố cục tự động:**
 - Màn nhỏ (3,5"–4", khung khoảng 480–570 × 320 dp): 2 cột, ẩn bớt dòng phụ khi thiếu chỗ (không thu chữ nhỏ hơn mức đọc được).
 - Màn vừa (4,5"–5,5"): 2 cột, hiện đủ can chi, dự báo theo giờ.
