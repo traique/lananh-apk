@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lịch Bảng</string>
+    <string name="settings">Cài đặt</string>
+    <string name="fgs_subtype">Giữ cảm biến tiệm cận để đánh thức màn hình lịch treo tường</string>
+    <string name="admin_label">Lịch Bảng – tắt màn hình ban đêm</string>
+    <string name="admin_desc">Cho phép Lịch Bảng tắt màn hình vào giờ đêm. Gỡ quyền này trong Cài đặt của app trước khi gỡ cài đặt.</string>
+</resources>
