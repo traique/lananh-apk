@@ -1,117 +1,170 @@
-# Lịch LCTA (`vn.lcta`)
+<p align="center">
+  <img src="docs/banner.png" alt="Nhật Nguyệt – lịch treo tường cho điện thoại Android" width="100%">
+</p>
 
-Bảng lịch treo tường cho điện thoại Android **từ 4.0.3 trở lên**, màn hình **nằm ngang**, tự co giãn theo kích thước máy (3,5" đến 6,7").
-Lấy dữ liệu **trực tiếp** từ nguồn, không qua bot/máy chủ trung gian. Cập nhật OTA từ GitHub Release.
+<p align="center">
+  <a href="https://github.com/traique/nhat-nguyet/releases/latest"><img src="https://img.shields.io/github/v/release/traique/nhat-nguyet?label=phi%C3%AAn%20b%E1%BA%A3n&color=5FD3B0" alt="Phiên bản mới nhất"></a>
+  <img src="https://img.shields.io/badge/Android-4.0.3%2B-3DDC84?logo=android&logoColor=white" alt="Android 4.0.3 trở lên">
+  <a href="https://github.com/traique/nhat-nguyet/actions/workflows/android.yml"><img src="https://github.com/traique/nhat-nguyet/actions/workflows/android.yml/badge.svg" alt="Trạng thái build"></a>
+</p>
+
+**Nhật Nguyệt** biến một chiếc điện thoại Android, kể cả máy rất cũ, thành tấm lịch treo tường: đồng hồ cỡ lớn, lịch âm dương, thời tiết, giá vàng, xăng dầu, tỷ giá, chứng khoán và tin tức trên một màn hình nằm ngang.
+
+Không cần tài khoản, không quảng cáo, không qua máy chủ trung gian: ứng dụng lấy dữ liệu thẳng từ các nguồn công khai.
+
+<p align="center">
+  <img src="docs/screens/board-6.7.png" alt="Bảng lịch 3 cột trên màn hình 6,7 inch" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screens/board-5.5.png" alt="Bảng lịch trên màn hình 5,5 inch, trang giá vàng"></td>
+    <td width="50%"><img src="docs/screens/board-3.5.png" alt="Bảng lịch trên màn hình 3,5 inch, trang dự báo thời tiết"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>5,5" · trang giá vàng</sub></td>
+    <td align="center"><sub>3,5" · trang dự báo thời tiết</sub></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screens/flip.png" alt="Chế độ đồng hồ lật cỡ lớn"></td>
+    <td><img src="docs/screens/night.png" alt="Bảng lịch ban đêm với tông chữ ấm"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Đồng hồ lật</sub></td>
+    <td align="center"><sub>Ban đêm, chữ tông ấm</sub></td>
+  </tr>
+</table>
 
 ## Tính năng
 
-**Cột trái (luôn hiện):** đồng hồ lớn, thứ/ngày, ngày âm lịch, can chi, ngày lễ hoặc đếm ngược, thời tiết hiện tại, dự báo vài giờ tới, dòng trạng thái kèm **biểu tượng pin và %** (vì app chạy toàn màn hình nên thanh trạng thái của máy bị ẩn; có tia sét khi đang sạc, chữ đỏ khi dưới 20% mà không sạc, báo nhiệt độ khi pin nóng từ 45°C).
+- **Bảng lịch tự co giãn.** Cột trái luôn hiện giờ, thứ ngày, âm lịch, can chi, ngày lễ, thời tiết hiện tại và pin. Mỗi dữ kiện nằm gọn một dòng; màn nhỏ tự ẩn dòng kém quan trọng thay vì thu chữ.
+- **Tờ lịch.** Ngày dương thật lớn, ngày âm màu đỏ son, can chi, giờ hoàng đạo và một câu ca dao mỗi ngày, như tờ lịch bloc treo tường.
+- **Lịch âm dương chính xác.** Thuật toán Hồ Ngọc Đức theo múi giờ +7: tháng nhuận, can chi ngày tháng năm, tiết khí, ngày và giờ hoàng đạo, ngày lễ, đếm ngược Tết.
+- **Thông tin cập nhật.** Thời tiết theo giờ và 6 ngày, giá vàng, giá xăng dầu, tỷ giá Vietcombank, chứng khoán trong phiên, tin tức RSS. Các trang tự xoay vòng; chạm để sang trang, vuốt ngang để tiến hoặc lùi.
+- **Đồng hồ lật.** Chế độ chỉ đồng hồ với hai thẻ giờ phút cỡ lớn, kèm ngày, âm lịch và thời tiết nếu muốn.
+- **Ngày và đêm.** Giờ ngày màn hình luôn sáng. Ban đêm chọn giảm sáng, tắt theo thời gian chờ hoặc tắt hẳn; chữ chuyển tông ấm để bớt ánh sáng xanh. Vẫy tay qua cảm biến tiệm cận để bật màn, tự bật lúc sáng, chống lưu ảnh.
+- **Chạy được ngoại tuyến.** Dữ liệu được lưu lại; mất mạng vẫn hiện số liệu gần nhất kèm nhãn "dữ liệu cũ".
+- **Tự cập nhật.** Tải bản mới từ GitHub Releases, kiểm tra SHA-256 và tên gói trước khi cài.
+- **Hợp máy cũ.** Android 4.0.3 trở lên, không cần root. Tự nhúng TLS 1.2 và bộ chứng chỉ gốc nên máy đời cũ vẫn kết nối được các trang HTTPS hiện nay.
 
-**Các trang tự xoay vòng bên phải** (bật/tắt từng trang trong Cài đặt). Chạm để sang trang, vuốt ngang để tiến/lùi. Sau khi chạm, các trang ngừng xoay 1 phút.
+## Cài đặt
+
+1. Tải tệp `NhatNguyet-x.y.z.apk` mới nhất ở trang [Releases](https://github.com/traique/nhat-nguyet/releases/latest).
+2. Mở tệp để cài. Lần đầu máy sẽ hỏi quyền cài ứng dụng từ nguồn ngoài:
+   - Android 4.x đến 7.x: *Cài đặt > Bảo mật > Nguồn không xác định*.
+   - Android 8 trở lên: cho phép trình duyệt hoặc trình quản lý tệp *cài ứng dụng không rõ nguồn*.
+3. Mở **Nhật Nguyệt**, đặt máy nằm ngang và cắm sạc. Bấm biểu tượng bánh răng ở góc trên bên phải để vào **Cài đặt** (hoặc giữ lâu vào đồng hồ).
+
+Gợi ý khi dùng làm lịch treo tường:
+
+- Đặt khoá màn hình là *Không* hoặc *Vuốt* để bảng tự hiện lại sau khi màn hình bật.
+- Nếu chọn "Tắt theo thời gian chờ" ban đêm, đặt thời gian chờ màn hình của máy khoảng 15–30 giây.
+- Samsung, Xiaomi, Oppo: cho Nhật Nguyệt chạy nền và tự khởi động trong phần quản lý pin của máy.
+
+## Tự động cập nhật
+
+Ứng dụng định kỳ đọc `update.json` của bản phát hành mới nhất, tải APK ngầm, kiểm tra SHA-256 và tên gói rồi mới mời cài:
+
+| Android | Cách cài bản mới |
+|---|---|
+| 4.x – 6.x | Mở trình cài đặt của máy, bấm **Cài đặt** một lần (máy không root không cài im lặng được). |
+| 7 trở lên | Cài qua PackageInstaller. Android 8+ cần cho phép Nhật Nguyệt cài ứng dụng; Android 12+ có thể không cần bấm từ lần cập nhật thứ hai. |
+
+Trong Cài đặt có thể chọn giờ tự mở màn hình cài trong ngày. Khi có bản mới, dòng trạng thái hiện "Có bản mới … chạm để cài". Cài xong ứng dụng tự mở lại.
+
+## Màn hình hỗ trợ
+
+| Kích thước | Bố cục |
+|---|---|
+| 3,5" – 4" | 2 cột; các dòng phụ tự ẩn khi thiếu chỗ, chữ không nhỏ hơn mức đọc được |
+| 4,5" – 5,5" | 2 cột, hiện đủ can chi và dự báo theo giờ |
+| 6,1" – 6,7" (tỉ lệ khoảng 20:9) | 3 cột: giờ và âm lịch · lịch tháng · trang xoay vòng |
+
+Có thể ép 2 cột hoặc 3 cột và chỉnh cỡ chữ trong Cài đặt.
+
+## Nguồn dữ liệu
 
 | Trang | Nguồn | Làm mới |
 |---|---|---|
-| Lịch tháng (âm + dương, ngày lễ, chấm xanh = hoàng đạo, ‹ › đổi tháng) | tính trong máy | – |
-| Âm lịch chi tiết (can chi, tiết khí, sao, giờ hoàng đạo, ngày lễ sắp tới, đếm ngược Tết) | tính trong máy | – |
-| Dự báo thời tiết (theo giờ + 6 ngày) | Open-Meteo | 15 phút |
+| Tờ lịch, lịch tháng, âm lịch | Tính ngay trên máy | – |
+| Thời tiết | [Open-Meteo](https://open-meteo.com) | 15 phút |
 | Giá vàng (SJC, nhẫn, DOJI, PNJ, Bảo Tín, thế giới) | vang.today | 10 phút |
-| Giá xăng dầu Petrolimex (vùng 1/2) | giaxanghomnay.com | 1 giờ |
-| Tỷ giá Vietcombank | portal.vietcombank.com.vn | 30 phút |
-| Chứng khoán (chỉ số + mã tự chọn, giá trong phiên) | Entrade/DNSE | 1 phút trong phiên, 30 phút ngoài phiên |
-| Tin tức (RSS tự chọn) | RSS | 10 phút |
+| Giá xăng dầu Petrolimex | giaxanghomnay.com | 1 giờ |
+| Tỷ giá | Vietcombank | 30 phút |
+| Chứng khoán (chỉ số và mã tự chọn) | Entrade / DNSE | 1 phút trong phiên, 30 phút ngoài phiên |
+| Tin tức | RSS tự chọn | 10 phút |
 
-Chỉ tải dữ liệu khi màn hình đang sáng. Dữ liệu được lưu lại, mất mạng vẫn hiện dữ liệu cũ kèm nhãn "dữ liệu cũ".
+Ứng dụng chỉ tải dữ liệu khi màn hình đang sáng. Lỗi ở một nguồn chỉ ảnh hưởng trang đó và được báo trên dòng trạng thái.
 
-**Chế độ chỉ đồng hồ lật (kiểu HTC):** chọn trong *Cài đặt > Trang hiển thị > Màn hình chính*. Hai thẻ giờ/phút cỡ lớn, nền xám than chia đôi có bản lề, nửa trên gập xuống khi đổi phút; tuỳ chọn hiện ngày, âm lịch, thời tiết bên dưới. Vẫn có pin, chế độ đêm, chống lưu ảnh; chỉ tải thời tiết để tiết kiệm mạng. Giữ lâu màn hình hoặc bấm ··· để mở Cài đặt.
+## Quyền ứng dụng
 
-**Bố cục tự động:**
-- Màn nhỏ (3,5"–4", khung khoảng 480–570 × 320 dp): 2 cột, ẩn bớt dòng phụ khi thiếu chỗ (không thu chữ nhỏ hơn mức đọc được).
-- Màn vừa (4,5"–5,5"): 2 cột, hiện đủ can chi, dự báo theo giờ.
-- Màn dài (6,1"–6,7", tỉ lệ ~20:9): 3 cột (giờ + âm lịch | lịch tháng cố định | trang xoay vòng).
-- Có thể ép 2 cột / 3 cột và chỉnh cỡ chữ trong Cài đặt.
+| Quyền | Dùng để |
+|---|---|
+| Internet, trạng thái mạng | Tải dữ liệu từ các nguồn ở trên |
+| Giữ màn hình sáng, bật màn hình, báo thức chính xác | Giờ ngày luôn sáng, tự bật màn lúc bắt đầu giờ ngày |
+| Khởi động cùng máy | Tự mở bảng lịch sau khi bật máy |
+| Dịch vụ nền và thông báo | Giữ cảm biến tiệm cận để vẫy tay bật màn |
+| Hiện trên ứng dụng khác, bỏ tối ưu pin | Để bảng lịch tự hiện lại trên Android đời mới |
+| Cài gói ứng dụng | Cập nhật bản mới |
+| Quản trị thiết bị (tuỳ chọn) | Tắt hẳn màn hình ban đêm; gỡ quyền này trong Cài đặt trước khi gỡ ứng dụng |
 
-**Màn hình ngày/đêm** (giống app Lan Anh, thêm chế độ):
-- Giờ ngày: màn luôn sáng.
-- Ban đêm, chọn 1 trong 3: chỉ giảm sáng · tắt theo thời gian chờ của máy khi không chạm · tắt hẳn (cần cấp quyền "Quản trị thiết bị", không cần root).
-- Đưa tay qua cảm biến tiệm cận để bật màn (dịch vụ chạy nền có thông báo).
-- Tự bật màn lúc bắt đầu giờ ngày, tự mở khi khởi động máy, hiện trên màn khoá.
-- Chống lưu ảnh: dịch nội dung vài điểm ảnh mỗi 2 phút.
+## Dành cho nhà phát triển
 
-Mở Cài đặt: **giữ lâu vào đồng hồ** hoặc bấm **···** ở góc trên bên phải.
+### Build trên máy
 
-## Hỗ trợ Android cũ
-
-- `minSdk 15` (Android 4.0.3). Không dùng AndroidX/Compose, giao diện dựng bằng View thường.
-- Android < 5.0 không có TLS 1.2 dùng được: app nhúng **Conscrypt 2.5.2** (bản cuối hỗ trợ API 9+) và chỉ bật nó trên máy < 5.0.
-- Kho chứng chỉ tin cậy = chứng chỉ của máy + bộ gốc Mozilla nhúng sẵn (`res/raw/cacerts.pem`), nên máy cũ vẫn kết nối được tới Let's Encrypt, Sectigo ECC, GTS…
-- Font Inter rút gọn (Latin + tiếng Việt, chữ số đều nhau) để dấu hiển thị đồng nhất; biểu tượng thời tiết tự vẽ (4.0 không có emoji màu).
-- APK ký cả v1 và v2; có thư viện cho armeabi-v7a, arm64-v8a, x86, x86_64 (máy mới chỉ chạy 64-bit vẫn cài được).
-- Lint chạy với `NewApi` là lỗi: build sẽ hỏng nếu lỡ dùng API mới hơn mà không kiểm tra phiên bản.
-
-## Cập nhật OTA qua GitHub Actions
-
-Mỗi lần đẩy tag `vX.Y.Z`, workflow `.github/workflows/android.yml` sẽ: chạy kiểm thử + lint, build bản release ký bằng keystore của bạn, tạo GitHub Release chứa `LichBang-X.Y.Z.apk` và `update.json`.
-App đọc `https://github.com/traique/lananh-apk/releases/latest/download/update.json`, tải APK ngầm, kiểm tra SHA-256 và tên gói rồi:
-- Android 4.x–6.x: mở trình cài đặt, **cần người bấm "Cài đặt"** (máy không root thì không cài im lặng được). Lần đầu bật *Cài đặt > Bảo mật > Nguồn không xác định*.
-- Android 7+: cài qua PackageInstaller; Android 8+ cần cho phép "Cài ứng dụng không rõ nguồn" cho Lịch LCTA; Android 12+ có thể không cần bấm từ lần cập nhật thứ hai.
-- Có tuỳ chọn tự mở màn hình cài vào một giờ cố định trong ngày, và dòng trạng thái "Có bản mới … chạm để cài".
-- Cài xong app tự mở lại.
-
-### Thiết lập một lần
-
-1. Tạo keystore (giữ thật kỹ, mất là **không cập nhật được nữa**; dùng RSA để Android 4.x đọc được chữ ký):
-   ```
-   keytool -genkeypair -v -keystore lichbang.jks -alias lichbang -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 36500
-   base64 -w0 lichbang.jks > lichbang.jks.b64
-   ```
-2. Trong GitHub repo: *Settings > Secrets and variables > Actions*, thêm 4 secret:
-   `KEYSTORE_BASE64` (nội dung file `.b64`), `KEYSTORE_PASSWORD`, `KEY_ALIAS` (vd `lichbang`), `KEY_PASSWORD`.
-3. Phát hành bản mới (làm được cả trên điện thoại):
-   *Actions > Android > Run workflow*, chọn nhánh chứa mã mới, ô **Phiên bản** nhập `1.0.1` (lớn hơn bản trước) rồi bấm *Run workflow*.
-   Workflow tự tạo tag `v1.0.1` và Release kèm APK + `update.json`. Cách khác: đẩy tag bằng git (`git tag v1.0.1 && git push origin v1.0.1`).
-   `versionCode = X*10000 + Y*100 + Z`, nên mỗi bản sau phải có số phiên bản lớn hơn.
-4. Cài bản đầu tiên bằng tay: tải `LichLCTA-x.y.z.apk` (bản 1.0.0 cũ tên `LichBang-1.0.0.apk`) trong mục Releases về máy và mở để cài. Các bản sau tự cập nhật.
-
-Đẩy lên nhánh thường (không phải tag) chỉ build bản debug (`vn.lcta.debug`, cài song song, không tự cập nhật) để thử; tải trong tab *Actions > Artifacts*.
-
-## Build trên máy
-
-```
+```bash
 ./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
 ```
-Cần JDK 17+ và Android SDK (platform 34). Bản release ký bằng biến môi trường `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`; tên phiên bản lấy từ `VERSION_NAME`.
-Muốn thử OTA với máy chủ khác (vd. máy ảo gọi `http://10.0.2.2:8000/update.json`), đặt biến `UPDATE_URL` khi build.
 
-## Đã kiểm tra
+Cần JDK 17 trở lên và Android SDK (platform 34). Giao diện dựng bằng View thường, không dùng AndroidX hay Compose; lint chạy với `NewApi` là lỗi nên build sẽ hỏng nếu lỡ gọi API mới hơn Android 4.0.3 mà không kiểm tra phiên bản.
 
-- Kiểm thử đơn vị: âm lịch (Tết 2020–2027 và 1985, tháng nhuận 2023/2025, Trung thu 2026, đổi qua lại 1990–2060), bộ đọc vàng/xăng/tỷ giá/thời tiết/RSS trên dữ liệu thật.
-- Máy ảo **Android 4.1.2 (API 16)**: cài APK ký v1, TLS qua Conscrypt, tải đủ 6 nguồn dữ liệu, font tiếng Việt, xoay trang, vẫy tay qua cảm biến tiệm cận để bật màn, màn Cài đặt, và trọn quy trình OTA (tự tải → chạm dòng trạng thái → trình cài của máy → app tự mở lại ở bản mới).
-- Bố cục được dựng thử ở 480×320 dp (3,5"), 640×360 dp (5,5") và 915×411 dp (6,7").
-- Chưa thử trên máy thật Android 4.0.3 và máy 6,7" thật (cảm biến tiệm cận, quyền tắt màn hình).
+Bản debug có tên gói `vn.nhatnguyet.debug`, cài song song với bản chính thức và không tự cập nhật. Muốn thử cập nhật với máy chủ khác (vd. máy ảo gọi `http://10.0.2.2:8000/update.json`), đặt biến `UPDATE_URL` khi build.
 
-## Cấu trúc mã
+### Phát hành bản mới
+
+Workflow `.github/workflows/android.yml` chạy kiểm thử và lint, build bản release đã ký, rồi tạo GitHub Release chứa `NhatNguyet-X.Y.Z.apk` và `update.json`.
+
+1. Tạo khoá ký một lần và **giữ thật kỹ** (mất khoá là không cập nhật được nữa; dùng RSA để Android 4.x đọc được chữ ký):
+   ```bash
+   keytool -genkeypair -v -keystore nhatnguyet.jks -alias nhatnguyet -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 36500
+   base64 -w0 nhatnguyet.jks > nhatnguyet.jks.b64
+   ```
+2. Trong repo: *Settings > Secrets and variables > Actions*, thêm 4 secret: `KEYSTORE_BASE64` (nội dung tệp `.b64`), `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
+3. Mở *Actions > Android > Run workflow*, nhập số phiên bản (vd. `1.0.1`) rồi chạy. Workflow tự tạo tag `v1.0.1` và Release. Cách khác: `git tag v1.0.1 && git push origin v1.0.1`.
+
+`versionCode = X×10000 + Y×100 + Z`, nên mỗi bản sau phải có số phiên bản lớn hơn. Workflow từ chối phát hành nếu APK bị ký bằng khoá debug.
+
+### Cấu trúc mã
 
 ```
-app/src/main/java/vn/lcta/
-  App.java, Prefs.java, Fmt.java, Theme.java
-  net/      Tls (Conscrypt + kho chứng chỉ), Http (theo chuyển hướng, giới hạn kích thước)
-  lunar/    Lunar (thuật toán Hồ Ngọc Đức, múi giờ +7), LunarDate
-  data/     DataHub (lịch tải, bộ nhớ đệm), các nguồn Weather/Gold/Fuel/Fx/Stock/News
-  ui/       MainActivity (bảng), SettingsActivity, Pages, FitColumn, MonthView, WeatherIcon
-  sys/      WakeService (cảm biến tiệm cận), BootReceiver, Scheduler/ScheduleReceiver, AdminReceiver
-  update/   Updater, InstallReceiver
+app/src/main/java/vn/nhatnguyet/
+  App, Prefs, Fmt, Theme   cài đặt, định dạng số kiểu Việt Nam, bảng màu ngày/đêm
+  net/      Tls (Conscrypt + kho chứng chỉ gốc), Http
+  lunar/    Lunar (âm lịch, can chi, tiết khí, hoàng đạo, ngày lễ), LunarDate
+  data/     DataHub (lịch tải, bộ nhớ đệm), các nguồn Weather, Gold, Fuel, Fx, Stock, News
+  ui/       MainActivity (bảng lịch), Pages, SettingsActivity, các view tự vẽ
+  sys/      WakeService (cảm biến tiệm cận), BootReceiver, Scheduler, AdminReceiver
+  update/   Updater, SessionInstall, InstallReceiver
 ```
+
+## Đã kiểm thử
+
+- Kiểm thử đơn vị: âm lịch (Tết 2020–2027 và 1985, tháng nhuận 2023 và 2025, Trung thu 2026, đổi qua lại 1990–2060), bộ đọc giá vàng, xăng dầu, tỷ giá, thời tiết và RSS trên dữ liệu thật.
+- Máy ảo Android 4.1.2 (API 16): cài APK ký v1, TLS qua Conscrypt, tải đủ các nguồn dữ liệu, font tiếng Việt, xoay trang, vẫy tay bật màn và trọn quy trình tự cập nhật.
+- Bố cục dựng thử ở 480×320 dp (3,5"), 640×360 dp (5,5") và 915×411 dp (6,7").
+- Chưa thử trên máy thật Android 4.0.3 và máy 6,7" thật.
 
 ## Lưu ý
 
-- Các nguồn vang.today, giaxanghomnay.com, Entrade/DNSE là API/trang **không chính thức**, có thể thay đổi. Lỗi ở nguồn nào chỉ ảnh hưởng trang đó và hiện trên dòng trạng thái.
-- Máy 6,7" đời mới: nhiều hãng dùng cảm biến tiệm cận "ảo" chỉ chạy khi đang gọi, nên vẫy tay có thể không bật được màn đã tắt.
-- Muốn bảng tự hiện lại sau khi tắt màn: đặt khoá màn hình là "Không" hoặc "Vuốt".
-- Trước khi gỡ app, gỡ quyền quản trị trong Cài đặt của app (nếu đã cấp).
-- Điện thoại cũ cắm sạc 24/7 dễ phồng pin: giữ độ sáng đêm thấp và thỉnh thoảng kiểm tra máy.
+- vang.today, giaxanghomnay.com và Entrade/DNSE là nguồn không chính thức, có thể thay đổi bất cứ lúc nào.
+- Nhiều máy đời mới chỉ bật cảm biến tiệm cận khi đang gọi, nên vẫy tay có thể không đánh thức được màn hình đã tắt.
+- Điện thoại cũ cắm sạc liên tục dễ phồng pin: giữ độ sáng đêm thấp và thỉnh thoảng kiểm tra máy. Dòng trạng thái cảnh báo khi pin nóng từ 45°C.
 
-## Giấy phép thành phần bên thứ ba
+## Thành phần bên thứ ba
 
-- Font Inter (bản rút gọn): SIL Open Font License 1.1, xem `app/src/main/assets/fonts/OFL.txt`.
-- Conscrypt: Apache License 2.0.
-- Bộ chứng chỉ gốc trong `res/raw/cacerts.pem`: lấy từ kho chứng chỉ Mozilla (MPL 2.0).
+- Font [Inter](https://rsms.me/inter/) (bản rút gọn): SIL Open Font License 1.1, xem `app/src/main/assets/fonts/OFL.txt`.
+- [Conscrypt](https://github.com/google/conscrypt): Apache License 2.0.
+- Bộ chứng chỉ gốc `res/raw/cacerts.pem`: từ kho chứng chỉ của Mozilla (MPL 2.0).
+- Dữ liệu thời tiết: [Open-Meteo](https://open-meteo.com) (CC BY 4.0).
+
+<p align="center"><sub>design by LCTA</sub></p>

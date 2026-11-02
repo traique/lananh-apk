@@ -14,16 +14,16 @@ try {
 }
 if (verCode < 1) verCode = 1
 
-def updateRepo = (System.getenv('UPDATE_REPO') ?: 'traique/lananh-apk').toString()
+def updateRepo = (System.getenv('UPDATE_REPO') ?: 'traique/nhat-nguyet').toString()
 // Có thể trỏ sang máy chủ khác để thử OTA (vd. http://10.0.2.2:8000/update.json trên máy ảo).
 def updateUrl = (System.getenv('UPDATE_URL') ?: "https://github.com/${updateRepo}/releases/latest/download/update.json").toString()
 
 android {
-    namespace 'vn.lcta'
+    namespace 'vn.nhatnguyet'
     compileSdk 34
 
     defaultConfig {
-        applicationId 'vn.lcta'
+        applicationId 'vn.nhatnguyet'
         minSdk 15
         targetSdk 34
         versionCode verCode

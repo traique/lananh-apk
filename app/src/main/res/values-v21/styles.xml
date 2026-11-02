@@ -7,8 +7,8 @@
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
     <style name="SettingsTheme" parent="@android:style/Theme.Material">
-        <item name="android:colorAccent">#FF34C3A0</item>
-        <item name="android:colorPrimary">#FF0B3D2E</item>
-        <item name="android:colorPrimaryDark">#FF06261C</item>
+        <item name="android:colorAccent">#FF5FD3B0</item>
+        <item name="android:colorPrimary">#FF16223F</item>
+        <item name="android:colorPrimaryDark">#FF0A1022</item>
     </style>
 </resources>
