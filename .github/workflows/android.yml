@@ -21,16 +21,16 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Kiểm thử và lint (API 15)
         run: ./gradlew --no-daemon :app:testDebugUnitTest :app:lintDebug
@@ -136,14 +136,14 @@ jobs:
           echo "apk=$APK" >> "$GITHUB_OUTPUT"
 
       - name: Lưu APK (tải trong tab Actions)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: LichBang-${{ steps.ver.outputs.name }}
           path: out/*
 
       - name: Tạo GitHub Release (OTA)
         if: steps.ver.outputs.release == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ steps.ver.outputs.name }}
           target_commitish: ${{ github.sha }}
