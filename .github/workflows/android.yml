@@ -103,7 +103,7 @@ jobs:
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
           if [ "$RELEASE" = "true" ]; then
             SRC=app/build/outputs/apk/release/app-release.apk
-            APK="LichBang-$V.apk"
+            APK="LichLCTA-$V.apk"
             # Không bao giờ phát hành bản ký bằng khoá debug.
             if "$BT/apksigner" verify --print-certs "$SRC" | grep -q "CN=Android Debug"; then
               echo "::error::APK đang ký bằng khoá debug – kiểm tra các secret KEYSTORE_*"
@@ -112,7 +112,7 @@ jobs:
             "$BT/apksigner" verify --min-sdk-version 15 "$SRC"
           else
             SRC=app/build/outputs/apk/debug/app-debug.apk
-            APK="LichBang-$V-debug.apk"
+            APK="LichLCTA-$V-debug.apk"
           fi
           cp "$SRC" "out/$APK"
           CODE=$("$BT/aapt" dump badging "out/$APK" | sed -nE "s/.*versionCode='([0-9]+)'.*/\1/p" | head -1)
@@ -138,7 +138,7 @@ jobs:
       - name: Lưu APK (tải trong tab Actions)
         uses: actions/upload-artifact@v7
         with:
-          name: LichBang-${{ steps.ver.outputs.name }}
+          name: LichLCTA-${{ steps.ver.outputs.name }}
           path: out/*
 
       - name: Tạo GitHub Release (OTA)
@@ -147,7 +147,7 @@ jobs:
         with:
           tag_name: v${{ steps.ver.outputs.name }}
           target_commitish: ${{ github.sha }}
-          name: Lịch Bảng ${{ steps.ver.outputs.name }}
+          name: Lịch LCTA ${{ steps.ver.outputs.name }}
           files: |
             out/${{ steps.pack.outputs.apk }}
             out/update.json

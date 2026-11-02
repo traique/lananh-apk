@@ -1,11 +1,11 @@
-# Lịch Bảng (`vn.lcta`)
+# Lịch LCTA (`vn.lcta`)
 
 Bảng lịch treo tường cho điện thoại Android **từ 4.0.3 trở lên**, màn hình **nằm ngang**, tự co giãn theo kích thước máy (3,5" đến 6,7").
 Lấy dữ liệu **trực tiếp** từ nguồn, không qua bot/máy chủ trung gian. Cập nhật OTA từ GitHub Release.
 
 ## Tính năng
 
-**Cột trái (luôn hiện):** đồng hồ lớn, thứ/ngày, ngày âm lịch, can chi, ngày lễ hoặc đếm ngược, thời tiết hiện tại, dự báo vài giờ tới, dòng trạng thái.
+**Cột trái (luôn hiện):** đồng hồ lớn, thứ/ngày, ngày âm lịch, can chi, ngày lễ hoặc đếm ngược, thời tiết hiện tại, dự báo vài giờ tới, dòng trạng thái kèm **biểu tượng pin và %** (vì app chạy toàn màn hình nên thanh trạng thái của máy bị ẩn; có tia sét khi đang sạc, chữ đỏ khi dưới 20% mà không sạc, báo nhiệt độ khi pin nóng từ 45°C).
 
 **Các trang tự xoay vòng bên phải** (bật/tắt từng trang trong Cài đặt). Chạm để sang trang, vuốt ngang để tiến/lùi. Sau khi chạm, các trang ngừng xoay 1 phút.
 
@@ -51,7 +51,7 @@ Mở Cài đặt: **giữ lâu vào đồng hồ** hoặc bấm **···** ở g
 Mỗi lần đẩy tag `vX.Y.Z`, workflow `.github/workflows/android.yml` sẽ: chạy kiểm thử + lint, build bản release ký bằng keystore của bạn, tạo GitHub Release chứa `LichBang-X.Y.Z.apk` và `update.json`.
 App đọc `https://github.com/traique/lananh-apk/releases/latest/download/update.json`, tải APK ngầm, kiểm tra SHA-256 và tên gói rồi:
 - Android 4.x–6.x: mở trình cài đặt, **cần người bấm "Cài đặt"** (máy không root thì không cài im lặng được). Lần đầu bật *Cài đặt > Bảo mật > Nguồn không xác định*.
-- Android 7+: cài qua PackageInstaller; Android 8+ cần cho phép "Cài ứng dụng không rõ nguồn" cho Lịch Bảng; Android 12+ có thể không cần bấm từ lần cập nhật thứ hai.
+- Android 7+: cài qua PackageInstaller; Android 8+ cần cho phép "Cài ứng dụng không rõ nguồn" cho Lịch LCTA; Android 12+ có thể không cần bấm từ lần cập nhật thứ hai.
 - Có tuỳ chọn tự mở màn hình cài vào một giờ cố định trong ngày, và dòng trạng thái "Có bản mới … chạm để cài".
 - Cài xong app tự mở lại.
 
@@ -68,7 +68,7 @@ App đọc `https://github.com/traique/lananh-apk/releases/latest/download/updat
    *Actions > Android > Run workflow*, chọn nhánh chứa mã mới, ô **Phiên bản** nhập `1.0.1` (lớn hơn bản trước) rồi bấm *Run workflow*.
    Workflow tự tạo tag `v1.0.1` và Release kèm APK + `update.json`. Cách khác: đẩy tag bằng git (`git tag v1.0.1 && git push origin v1.0.1`).
    `versionCode = X*10000 + Y*100 + Z`, nên mỗi bản sau phải có số phiên bản lớn hơn.
-4. Cài bản đầu tiên bằng tay: tải `LichBang-1.0.0.apk` trong mục Releases về máy và mở để cài. Các bản sau tự cập nhật.
+4. Cài bản đầu tiên bằng tay: tải `LichLCTA-x.y.z.apk` (bản 1.0.0 cũ tên `LichBang-1.0.0.apk`) trong mục Releases về máy và mở để cài. Các bản sau tự cập nhật.
 
 Đẩy lên nhánh thường (không phải tag) chỉ build bản debug (`vn.lcta.debug`, cài song song, không tự cập nhật) để thử; tải trong tab *Actions > Artifacts*.
 

@@ -28,7 +28,7 @@ public final class Http {
     private static final int MAX_REDIRECTS = 6;
 
     public static final String UA = "Mozilla/5.0 (Linux; Android " + Build.VERSION.RELEASE
-            + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 LichBang/"
+            + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Mobile Safari/537.36 LichLCTA/"
             + BuildConfig.VERSION_NAME;
 
     public interface Progress {
