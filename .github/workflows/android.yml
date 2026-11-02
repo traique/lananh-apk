@@ -6,6 +6,11 @@ on:
     tags: ['v*']
   pull_request:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Phiên bản phát hành, dạng X.Y.Z (vd 1.0.1). Để trống = chỉ build thử.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -32,11 +37,23 @@ jobs:
 
       - name: Xác định phiên bản
         id: ver
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && -n "$INPUT_VERSION" ]]; then
+            V="${INPUT_VERSION#v}"
+            if git ls-remote --exit-code --tags origin "refs/tags/v$V" >/dev/null; then
+              echo "::error::Đã có tag v$V – hãy chọn số phiên bản lớn hơn."
+              exit 1
+            fi
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             V="${GITHUB_REF#refs/tags/v}"
+          else
+            V=""
+          fi
+          if [[ -n "$V" ]]; then
             if ! [[ "$V" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo "::error::Tag phải có dạng vX.Y.Z (vd v1.2.3), nhận được v$V"
+              echo "::error::Phiên bản phải có dạng X.Y.Z (vd 1.2.3), nhận được $V"
               exit 1
             fi
             echo "release=true" >> "$GITHUB_OUTPUT"
@@ -128,6 +145,8 @@ jobs:
         if: steps.ver.outputs.release == 'true'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.ver.outputs.name }}
+          target_commitish: ${{ github.sha }}
           name: Lịch Bảng ${{ steps.ver.outputs.name }}
           files: |
             out/${{ steps.pack.outputs.apk }}

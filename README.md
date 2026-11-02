@@ -59,17 +59,15 @@ App đọc `https://github.com/traique/lananh-apk/releases/latest/download/updat
 
 1. Tạo keystore (giữ thật kỹ, mất là **không cập nhật được nữa**; dùng RSA để Android 4.x đọc được chữ ký):
    ```
-   keytool -genkeypair -v -keystore lichbang.jks -alias lichbang -keyalg RSA -keysize 2048 -validity 36500
+   keytool -genkeypair -v -keystore lichbang.jks -alias lichbang -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 36500
    base64 -w0 lichbang.jks > lichbang.jks.b64
    ```
 2. Trong GitHub repo: *Settings > Secrets and variables > Actions*, thêm 4 secret:
    `KEYSTORE_BASE64` (nội dung file `.b64`), `KEYSTORE_PASSWORD`, `KEY_ALIAS` (vd `lichbang`), `KEY_PASSWORD`.
-3. Phát hành bản mới:
-   ```
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-   `versionCode = X*10000 + Y*100 + Z`, nên mỗi bản sau phải có tag lớn hơn.
+3. Phát hành bản mới (làm được cả trên điện thoại):
+   *Actions > Android > Run workflow*, chọn nhánh chứa mã mới, ô **Phiên bản** nhập `1.0.1` (lớn hơn bản trước) rồi bấm *Run workflow*.
+   Workflow tự tạo tag `v1.0.1` và Release kèm APK + `update.json`. Cách khác: đẩy tag bằng git (`git tag v1.0.1 && git push origin v1.0.1`).
+   `versionCode = X*10000 + Y*100 + Z`, nên mỗi bản sau phải có số phiên bản lớn hơn.
 4. Cài bản đầu tiên bằng tay: tải `LichBang-1.0.0.apk` trong mục Releases về máy và mở để cài. Các bản sau tự cập nhật.
 
 Đẩy lên nhánh thường (không phải tag) chỉ build bản debug (`vn.lcta.debug`, cài song song, không tự cập nhật) để thử; tải trong tab *Actions > Artifacts*.
